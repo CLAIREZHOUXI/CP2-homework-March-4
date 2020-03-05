@@ -1,0 +1,170 @@
+import React, { Component } from "react";
+
+import "./styles.css";
+
+var pages = {
+  start: {
+    content: (getData, setData) => (
+      <p>
+        What is your name?
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("name")}
+          onChange={event => setData("name", event.target.value)}
+        />
+        <br />
+        <br />
+        What is your birthday?
+        <br />
+        <br />
+        <input
+          type="date"
+          value={getData("birthday")}
+          onChange={event => setData("birthday", event.target.value)}
+        />
+        <br />
+        <br />
+        What's your age?
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("age")}
+          onChange={event => setData("age", event.target.value)}
+        />
+      </p>
+    ),
+    buttons: [{ label: "Continue", page: "welcome" }]
+  },
+
+  welcome: {
+    content: (getData, setData) => (
+      <p>
+        Welcome, {getData("name")}! Happy birthday!
+        <br />
+        <br />
+        What kind of birthday party you want? (Adjective)
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("adj")}
+          onChange={event => setData("adj", event.target.value)}
+        />
+        <br />
+        <br />
+        Who do you want to invite the most?
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("friend")}
+          onChange={event => setData("friend", event.target.value)}
+        />
+        <br />
+      </p>
+    ),
+    buttons: [{ label: "Continue", page: "Favoratethings" }]
+  },
+
+  Favoratethings: {
+    content: (getData, setData) => (
+      <p>
+        Got it {getData("name")}! Let's continue!
+        <br />
+        <br />
+        What's the gift you want the most?
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("gift")}
+          onChange={event => setData("gift", event.target.value)}
+        />
+        <br />
+        <br />
+        What's your favorite food?
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("food")}
+          onChange={event => setData("food", event.target.value)}
+        />
+        <br />
+        <br />
+        What's your favorite drink?
+        <br />
+        <br />
+        <input
+          type="text"
+          value={getData("drink")}
+          onChange={event => setData("drink", event.target.value)}
+        />
+        <br />
+      </p>
+    ),
+    buttons: [{ label: "Surprise", page: "Surprise" }]
+  },
+
+  Surprise: {
+    content: (getData, setData) => (
+      <p>
+        Congrats, {getData("name")}! No longer {getData("age")}! As you are
+        getting elder. Your friend {getData("friend")} want to arrange a
+        birthday party for you! It will be on {getData("birthday")} at your
+        place. {getData("friend")} will prepare a {getData("adj")} birthday
+        party for you. Guess what? Yeah, they bought the gift you want for years
+        — which is NOT {getData("gift")}. And they WON’T PREP {getData("food")}{" "}
+        or {getData("drink")}.
+        <br />
+        LOL Just kidding.
+      </p>
+    ),
+    buttons: [{ label: "Done", page: "Done" }]
+  }
+};
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      page: "start",
+      name: ""
+    };
+  }
+
+  goToPage(pageName) {
+    this.setState({
+      page: pageName
+    });
+  }
+
+  setData(dataName, dataValue) {
+    var newState = {};
+    newState[dataName] = dataValue;
+    this.setState(newState);
+  }
+
+  render() {
+    var pageData = pages[this.state.page];
+    return (
+      <div className="App">
+        {pageData.content(
+          dataName => this.state[dataName] || "",
+          (name, value) => this.setData(name, value)
+        )}
+        {pageData.buttons.map(buttonInfo => (
+          <button onClick={() => this.goToPage(buttonInfo.page)}>
+            {buttonInfo.label}
+          </button>
+        ))}
+      </div>
+    );
+  }
+}
+
+export default App;
